@@ -1,0 +1,50 @@
+# Rabbit
+rabbit_user: "openstack"
+rabbit_password: "junedm"
+
+# # IPs
+controller_ip: 10.143.2.28
+controller_external_ip: 10.143.2.28
+storage_ip: 10.143.2.28
+storage_external_ip: 10.143.2.28
+network_node_ip: 10.143.2.28
+network_node_external_ip: 10.143.2.28
+network_node_external_netmask: 255.255.255.0
+ext_net_nic: eth2
+
+# # MySQL passwords
+root_db_password: "junedm" 
+keystone_db_password: "junedm"
+glance_db_password: "junedm"
+cinder_db_password: "junedm"
+nova_db_password: "junedm"
+neutron_db_password: "junedm"
+heat_db_password: "junedm"
+trove_db_password: "junedm"
+
+
+# # Keystone identity passwords:
+glance_identity_password: "glance"
+nova_identity_password: "nova"
+ec2_identity_password: "ec2"
+neutron_identity_password: "neutron"
+cinder_identity_password: "cinder"
+heat_identity_password: "heat"
+trove_identity_password: "trove"
+
+# # OpenStack variables
+admin_token: "012345SECRET99TOKEN012345"
+region: RegionOne
+admin_pass: "junedm"
+demo_pass: "junedm"
+
+# # Log verbosity
+log_debug: False
+# log_verbose: True
+
+# # Neutron
+ext_net_nic: eth2
+shared_secret: "junedm"
+
+# # Cinder
+physical_device: /dev/sdb

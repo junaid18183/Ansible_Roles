@@ -1,0 +1,4 @@
+---
+# tasks file for dummy
+
+   - debug: msg="I love my India"

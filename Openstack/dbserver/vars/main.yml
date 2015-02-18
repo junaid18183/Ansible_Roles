@@ -1,0 +1,3 @@
+---
+# vars file for dbserver
+root_db_password: "junedm"
