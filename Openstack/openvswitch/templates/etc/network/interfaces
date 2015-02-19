@@ -1,0 +1,25 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+allow-hotplug eth0
+iface eth0 inet dhcp
+pre-up sleep 2
+
+auto br-ex
+iface br-ex inet static
+    address {{ network_node_external_ip }}
+    netmask {{ network_node_external_netmask }}
+#     ovs_type OVSBridge
+#     ovs_ports {{ ext_net_nic }}
+
+# allow-br-ex {{ ext_net_nic }}
+# iface {{ ext_net_nic }} inet manual
+#     ovs_bridge br-ex
+#     ovs_type OVSPort
+
+
