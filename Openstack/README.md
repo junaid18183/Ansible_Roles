@@ -15,7 +15,6 @@
 - hosts: storage-nodes
   roles:
     - role: glanceserver
-    - role: glance_init
     - role: cindervolume
 
 - hosts: compute-nodes
