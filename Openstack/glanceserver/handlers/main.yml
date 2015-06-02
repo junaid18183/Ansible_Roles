@@ -1,8 +1,0 @@
-
-- name: restart glance-services
-  service: name={{ item }} state=restarted
-  with_items:
-    - openstack-glance-registry
-    - openstack-glance-api
-#    - openstack-glance-scrubber
-

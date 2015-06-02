@@ -1,2 +1,3 @@
 ---
 # tasks file for Openstack_Compute
+- include: novacompute.yml

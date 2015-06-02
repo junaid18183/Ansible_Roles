@@ -1,5 +1,0 @@
----
-# vars file for rabbitserver
-rabbit_user: "openstack"
-rabbit_password: "junedm"
-

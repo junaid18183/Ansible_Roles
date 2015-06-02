@@ -1,0 +1,72 @@
+- name: ensure IP forward bit is activated
+  sysctl: name=net.ipv4.ip_forward value=1 state=present reload=yes
+
+- name: ensure IPv4 rp filter is deactivated
+  sysctl: name=net.ipv4.conf.all.rp_filter value=0 state=present reload=yes
+
+- name: ensure IPv4 default rp filter is deactivated
+  sysctl: name=net.ipv4.conf.default.rp_filter value=0 state=present reload=yes
+    
+- name: ensure plugins, agents and openvswitch packages are installed
+  yum: pkg={{ item }}
+  with_items:
+    - openstack-neutron
+    - openstack-neutron-ml2
+    - openstack-neutron-openvswitch
+
+
+- name: ensure neutron.conf is configured
+  template: >
+    src=etc/neutron/neutron.conf.j2
+    dest=/etc/neutron/neutron.conf
+    owner=neutron group=neutron mode=0660
+  notify:
+    - restart neutron agents
+
+- name: ensure ml2 plugin is configured
+  template: >
+    src=etc/neutron/plugins/ml2/ml2_conf.ini.j2
+    dest=/etc/neutron/plugins/ml2/ml2_conf.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: ensure l3 agent is configured
+  template: >
+    src=etc/neutron/l3_agent.ini.j2
+    dest=/etc/neutron/l3_agent.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: ensure DHCP agent is configured
+  template: >
+    src=etc/neutron/dhcp_agent.ini.j2
+    dest=/etc/neutron/dhcp_agent.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: Add dnsmasq-neutron.conf file
+  template: >
+    src=etc/neutron/dnsmasq-neutron.conf.j2
+    dest=/etc/neutron/lbaas_agent.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: ensure metadata agent is configured
+  template: >
+    src=etc/neutron/metadata_agent.ini.j2
+    dest=/etc/neutron/metadata_agent.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: restart neutron agents
+  service: name={{ item }} state=restarted
+  with_items:
+    - neutron-l3-agent
+    - neutron-dhcp-agent
+    - neutron-metadata-agent
+

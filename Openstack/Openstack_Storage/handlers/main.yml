@@ -1,2 +1,16 @@
 ---
 # handlers file for Openstack_Storage
+
+- name: restart glance-services
+  service: name={{ item }} state=restarted
+  with_items:
+    - openstack-glance-registry
+    - openstack-glance-api
+#    - openstack-glance-scrubber
+
+- name: restart cinder services
+  service: name={{ item }} state=restarted
+  with_items:
+    - openstack-cinder-volume
+    - tgtd 
+# tgtd scsi-target-utils 

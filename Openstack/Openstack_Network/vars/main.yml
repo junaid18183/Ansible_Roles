@@ -1,2 +1,17 @@
 ---
-# vars file for Openstack_Network
+# vars file for openvswitch
+
+# IPs
+mngt_net_nic: eth0
+ext_net_nic: eth1 
+
+controller_ip: 10.143.2.27
+
+neutron_identity_password: "neutron"
+neutron_db_password: "junedm"
+
+nova_identity_password: "nova"
+
+# Rabbit
+rabbit_user: "openstack"
+rabbit_password: "junedm"

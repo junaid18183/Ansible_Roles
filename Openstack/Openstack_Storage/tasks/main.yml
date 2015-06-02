@@ -1,2 +1,5 @@
 ---
 # tasks file for Openstack_Storage
+- include: glanceserver.yml
+- include: cindervolume.yml
+

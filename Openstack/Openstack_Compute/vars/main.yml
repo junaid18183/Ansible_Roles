@@ -1,2 +1,11 @@
 ---
 # vars file for Openstack_Compute
+controller_ip: 10.143.2.27
+
+nova_db_password: "junedm"
+nova_identity_password: "nova"
+neutron_identity_password: "neutron"
+
+# Rabbit
+rabbit_user: "openstack"
+rabbit_password: "junedm"

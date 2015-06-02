@@ -1,0 +1,53 @@
+- name: ensure keystone packages are installed
+  yum: pkg={{ item }}
+  with_items:
+    - openstack-keystone
+    - python-openstackclient
+    - memcached 
+    - python-memcached
+    - openstack-utils
+# openstack-utils will give you utilities like openstack-status etc 
+#  notify: start keystone
+
+- name: Make sure the Memcached service is running
+  service: name=memcached state=started enabled=yes
+
+- name: Make sure the openstack-keystone service is running
+  service: name=openstack-keystone state=started enabled=yes
+  
+- name: ensure sqlite keystone database is deleted
+  file: dest=/var/lib/keystone/keystone.db state=absent
+
+- name: ensure keystone config script is present
+  template: >
+    src=etc/keystone/keystone.conf.j2
+    dest=/etc/keystone/keystone.conf
+    owner=keystone
+    group=keystone
+    mode=0600
+
+#- name: Create generic certificates and keys
+#  shell : keystone-manage pki_setup --keystone-user keystone --keystone-group keystone
+
+- name: DB sync for keystone
+  shell: >
+    /usr/bin/keystone-manage db_sync
+  notify: restart keystone
+
+- name: restart keystone
+  service: name=openstack-keystone state=restarted
+
+
+#Can Add below steps
+# chown -R keystone:keystone /var/log/keystone
+# chown -R keystone:keystone /etc/keystone/ssl
+# chmod -R o-rwx /etc/keystone/ssl
+
+#currently facing below oslo erros,  looks like packaging issue, have fixed them as below
+#----------------------------------------------------------------------------------------
+#ImportError: No module named oslo_messaging
+#cp -r /usr/lib/python2.7/site-packages/oslo/messaging /usr/lib/python2.7/site-packages/oslo_messaging
+
+#ImportError: No module named oslo_db
+#cp -r /usr/lib/python2.7/site-packages/oslo/db /usr/lib/python2.7/site-packages/oslo_db
+#----------------------------------------------------------------------------------------

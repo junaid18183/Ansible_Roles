@@ -1,0 +1,38 @@
+- name: ensure nova packages are installed
+  yum: pkg={{ item }}
+  with_items:
+    - openstack-nova-compute
+    - sysfsutils
+
+- name: Make sure the openstack-nova-compute service is running and enabled
+  service: name=nova-compute state=started enabled=yes
+
+- name: verify if hypervisor support hw accel is enabled
+  command: egrep '(vmx|svm)' /proc/cpuinfo
+  register: result
+  ignore_errors: True
+
+#- name: ensure nova-compute-kvm is installed
+#  yum: pkg=nova-compute-kvm
+#  when: result|success
+
+- name: ensure nova-compute-qemu is installed
+  yum: pkg=qemu-kvm
+  when: result|failed
+
+#- name: ensure python-guestfs is installed
+#  yum: pkg=python-guestfs
+
+#- name: ensure nova sqlite is deleted
+#  file: dest=/var/lib/nova/nova.sqlite state=absent
+    
+- name: ensure nova.conf file is present
+  template: >
+    src=etc/nova/nova.conf.j2
+    dest=/etc/nova/nova.conf
+    owner=nova
+    group=nova
+    mode=0660
+  notify: 
+  - restart nova-compute
+

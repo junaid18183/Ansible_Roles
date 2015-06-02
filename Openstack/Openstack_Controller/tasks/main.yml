@@ -1,2 +1,11 @@
 ---
-# tasks file for Openstack_Controller
+## tasks file for Openstack_Controller
+- include: common.yml
+- include: dbserver.yml
+- include : dbserver_population.yml
+- include: rabbitserver.yml
+- include: keystoneserver.yml
+- include: keystone_population.yml
+- include: glanceserver.yml
+- include: novaserver.yml
+- include: neutronserver.yml

@@ -1,5 +1,0 @@
----
-# vars file for keystoneserver
-admin_token: "012345SECRET99TOKEN012345"
-keystone_db_password: "junedm"
-controller_ip: 172.28.128.6

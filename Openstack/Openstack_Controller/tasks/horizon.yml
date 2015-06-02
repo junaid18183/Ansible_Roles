@@ -1,0 +1,14 @@
+- name: ensure horizon packages are installed
+  yum: pkg={{ item }}
+  with_items:
+    - memcached
+    - httpd
+    - mod_wsgi
+    - openstack-dashboard
+
+- name: ensure dashboard is configured
+  template: >
+    src=etc/openstack-dashboard/local_settings.py
+    dest=/etc/openstack-dashboard/local_settings.py
+    owner=root group=root mode=0644
+  notify: restart web services

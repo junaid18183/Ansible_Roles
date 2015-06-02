@@ -1,2 +1,4 @@
 ---
 # tasks file for Openstack_Network
+- include: neutron-agents.yml
+- include: openvswitch.yml

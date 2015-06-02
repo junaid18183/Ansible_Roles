@@ -1,2 +1,17 @@
 ---
 # defaults file for Openstack_Controller
+
+mngt_net : "{{ 'ansible_' ~ mngt_net_nic ~ '.ipv4.address' }}"
+
+controller_ip: "{{ ansible_default_ipv4.address }}"
+#controller_external_ip: "{{ ansible_eth0.ipv4.address }}"
+controller_external_ip: "{{ ansible_default_ipv4.address }}"
+controller_mngt_ip: "{{ ansible_default_ipv4.address }}"
+#controller_mngt_ip: "{{ ansible_eth1.ipv4.address }}"
+
+#Glance Sampple image 
+img_name: CirrOS_0.3.4
+img_url: http://download.cirros-cloud.net/0.3.4/cirros-0.3.4-x86_64-disk.img
+
+#Servie endpoint Env
+os_url: "http://{{ controller_ip }}:35357/v2.0"

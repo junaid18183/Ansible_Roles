@@ -1,2 +1,44 @@
 ---
-# handlers file for Openstack_Network
+- name: restart neutron-server
+  service: name=neutron-server state=restarted
+
+  
+- name: restart neutron agents
+  service: name={{ item }} state=restarted
+  with_items:
+    - neutron-l3-agent
+    - neutron-dhcp-agent
+    - neutron-lbaas-agent
+    - neutron-metadata-agent
+    
+- name: restart openvswitch services
+  service: name=openvswitch-switch state=restarted
+
+- name: restart network
+  service: name=networking state=restarted
+ 
+- name: restart neutron agents
+  service: name={{ item }} state=restarted
+  with_items:
+    - neutron-l3-agent
+    - neutron-dhcp-agent
+#    - neutron-lbaas-agent
+    - neutron-metadata-agent
+
+- name: restart ovs agent
+  service: name={{ item }} state=restarted
+  with_items:
+    - neutron-openvswitch-agent
+    - openvswitch
+
+- name: restart network
+  service: name=networking state=restarted
+ 
+- name: restart neutron agents
+  service: name={{ item }} state=restarted
+  with_items:
+    - neutron-l3-agent
+    - neutron-dhcp-agent
+    - neutron-lbaas-agent
+    - neutron-metadata-agent
+    

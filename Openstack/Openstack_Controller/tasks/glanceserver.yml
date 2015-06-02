@@ -1,0 +1,78 @@
+#- name : create the glance service
+#  shell: "openstack service create --type image --description 'OpenStack Image service' glance"
+#  ignore_errors: yes
+#  environment:
+#    OS_TOKEN : "{{ admin_token }}"
+#    OS_URL : "{{ os_url }}"
+
+#- name : create the glance endpoint
+#  shell : "openstack endpoint create --publicurl http://{{ controller_ip }}:9292  --internalurl http://{{ controller_ip }}:9292 --adminurl http://{{ controller_ip }}:9292  --region RegionOne  image"
+#  ignore_errors: yes
+#  environment:
+#    OS_TOKEN : "{{ admin_token }}"
+#    OS_URL : "{{ os_url }}"
+
+- name: ensure glance is installed
+  yum: pkg={{ item }}
+  with_items:
+#    - openstack-glance-api 
+#    - openstack-glance-registry 
+    - openstack-glance 
+    - python-glance 
+    - python-glanceclient
+
+- name: Make sure the openstack-glance-api service is running
+  service: name=openstack-glance-api state=started enabled=yes
+
+- name: Make sure the openstack-glance-registry service is running
+  service: name=openstack-glance-registry state=started enabled=yes
+
+- name: ensure glance sqlite is deleted
+  file: dest=/var/lib/glance/glance.sqlite state=absent
+
+- name: ensure glance-api.conf file is up to date
+  template: >
+    src=etc/glance/glance-api.conf.j2
+    dest=/etc/glance/glance-api.conf
+    owner=glance
+    group=glance
+    mode=0600
+  notify:
+  - restart glance-services
+
+- name: ensure glance-registry.conf file is up to date
+  template: >
+    src=etc/glance/glance-registry.conf.j2
+    dest=/etc/glance/glance-registry.conf
+    owner=glance
+    group=glance
+    mode=0600
+  notify:
+  - restart glance-services
+
+
+- name: restart glance api and registry
+  service: name={{ item }} state=restarted
+  with_items:
+    - openstack-glance-registry
+    - openstack-glance-api
+#    - openstack-glance-scrubber
+
+# Not needed since UTF-8 is properly defined into database conf file, but I got error in glance/api.log while doing db_sync
+#
+- name: ensure migrate_version table is in UTF-8
+  command: mysql -u glance -h {{ controller_ip }} -p{{ root_db_password }} -e 'alter table migrate_version convert to character set utf8 collate utf8_unicode_ci;' glance
+  ignore_errors: yes
+
+- name: ensure glance db is initialized
+  command: /usr/bin/glance-manage db_sync
+
+- name: ensure cirros image is added to glance
+  glance_image: login_username=admin
+                  login_password={{ admin_pass }}
+                  login_tenant_name=admin
+                  name={{ img_name }}
+                  container_format=bare
+                  disk_format=qcow2
+                  state=present
+                  copy_from={{ img_url }}

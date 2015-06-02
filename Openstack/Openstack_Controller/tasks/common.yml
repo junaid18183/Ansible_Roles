@@ -1,0 +1,14 @@
+#- name: install the rdo release rpm from a rdo site repo
+#  yum: name=http://rdo.fedorapeople.org/openstack-juno/rdo-release-juno.rpm state=present
+
+# rdo-release.rpm is using Kilo now
+
+- name: install the rdo release rpm from a rdo site repo
+  yum: name=https://rdoproject.org/repos/rdo-release.rpm state=present
+
+- name: Ensure common packages are installed
+  yum: pkg={{ item }}
+  with_items:
+    - ntp
+    - epel-release
+    - openstack-selinux
